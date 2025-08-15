@@ -3,7 +3,7 @@ import { listarCrush, inserircrush} from "./cursoRepository.js"
 import { Listarturma, inserirturma} from "./turmasrepository.js"
 import { listarfuncionarios , insirfuncionarios} from "./funcionariosrepository.js";
 import { ListarProduto , inserirproduto} from "./produtorepository.js";
-import { listarjogador , inserirjogador} from "./clubefutrepository.js";
+import * as novo from "./clubefutrepository.js";
 import { listarpraias , inserirnovapraia } from "./praiasrepository.js";
 import { listarEstado , Adicionarestado } from './estadorepository.js';
 import { listarmaterial , Adicionamaterial} from "./materialEscolarepository.js"
@@ -106,14 +106,27 @@ api.post('/produto' , async (req , resp) => {
  })
 
  api.get('/jogador' , async (req , resp) => {
-    let resultado = await listarjogador()
+    let resultado = await novo.listarjogador()
 
     resp.send(resultado)
  })
+ 
+ api.get('/jogador/:id' , async (req , resp) => { 
+  let id = req.params.id;
+  let registros = await novo.consultarJogador(id)
+  resp.send(registros);
+  })
+
+  api.get('/jogador/filtrar' , async (req , resp) => {
+    let nm_jogador = req.query.nm_jogador;
+    let registros = await novo.coonsultaJogadorpornome(nm_jogador);
+    console.log("registro", registros);
+    resp.send(registros);
+  })
 
  api.post('/jogador' , async (req , resp) => { 
     let novojogador = req.body;
-    let id = await inserirjogador(novojogador);
+    let id = await novo.inserirjogador(novojogador);
     resp.send({
         novoId: id
         })
